@@ -26,15 +26,10 @@ Done :white_check_mark:
 - Reports (and all figures therein) are compiled in the language the participant has used to complete the survey
 
 To do :interrobang:
-- Customised figures and tables.
-- [Feedback from you]
+- Let me know what you would like to see added.
 
 ## User guide
-Soon there will be a user guide how this script can be used. For example: Prepare an R dataframe with the following format:
-- First column: ID
-- Second column: email address
-- Third column: langauge
-- etc.
+Using the repo is straightforward. First, fork it to your local machine. Second, open *master.R* and run the entire script. This will, if all prerequisities (see above) are installed properly, generate 15 reports in french, german or italian and save the pdfs into the *reports* folder. Third, add your dataset (manditory variables are id, token, startlanguage, wine_region) and modify the scripts (*german_text.Rmd*, *french_text.Rmd* and *italian_text.Rmd*) to your liking.
 
 ## Preview
 This can look like shown [here](/reports/Votre%20Rapport%20(Nr.%20100).pdf).

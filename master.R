@@ -34,7 +34,6 @@ for (i in 1:15) {
             id = data$id[i],
             token = data$token[i],
             language = data$startlanguage[i],
-            gender = data$gender[i],
             wine_region = data$wine_region[i]
           ), 
           output_file = paste('reports/',ifelse(data$startlanguage[i] == "de","Ihr Bericht (",ifelse(data$startlanguage[i] == "fr","Votre Rapport (","Vostro Rapporto (")),'Nr. ',data$id[i],').pdf', sep = ''),
