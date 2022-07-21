@@ -37,7 +37,7 @@ Soon there will be a user guide how this script can be used. For example: Prepar
 - etc.
 
 ## Preview
-This can look like shown [here](/reports/Ihr%20Bericht%20(Nr.%201).pdf).
+This can look like shown [here](/reports/Votre%20Rapport%20(Nr.%20100).pdf).
 
 ### Author: 
 Lucca Zachmann (lzachmann[at]ethz.ch)  
