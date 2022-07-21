@@ -1,0 +1,64 @@
+---
+title: |
+  ![](data/eth_logo.png){width=15cm}  
+  `r if (params$language == "de") "**Persönliches Feedback: Weinbau Umfrage**" else if (params$language == "fr") "**Feedback personnels: Sondage viticulture**" else if (params$language == "it") "**Feedback personale: Sondaggio viticultura**" else "**Feedback: Grapevine survey**"` **2022** 
+author: 
+  - Lucca Zachmann
+  - Chloe McCallum
+  - Robert Finger
+institute: Agricultural Economics
+date: "`r if (params$language == 'fr') {
+  Sys.setlocale('LC_TIME', 'fr_FR.UTF-8') 
+  format(Sys.time(), '%d. %B %Y')
+} else if (params$language == 'de') {
+  Sys.setlocale('LC_TIME', 'de_DE.UTF-8') 
+  format(Sys.time(), '%d. %B %Y')
+} else if (params$language == 'it') {
+  Sys.setlocale('LC_TIME', 'it_IT.UTF-8') 
+  format(Sys.time(), '%d. %B %Y')
+} else if (params$language == 'en') {
+  Sys.setlocale('LC_TIME', 'en_EN.UTF-8') 
+  format(Sys.time(), '%d %B %Y')
+}`"
+header-includes:
+  \renewcommand{\contentsname}{`r if (params$language == "de") "Inhaltsverzeichnis" else if (params$language == "fr") "Table des matières" else if (params$language == "it") "Elenco del contenuto" else "Table of contents"`}
+  \usepackage[bottom]{footmisc}
+  \usepackage{floatrow}
+  \floatsetup[figure]{capposition=top}
+  \hypersetup{colorlinks = false, pdfborder={1 1 1}}
+  \usepackage{fontawesome5}
+link-citations: yes  
+output: 
+  pdf_document:
+        includes:
+          keep_tex: yes
+        toc_depth: 3
+        number_sections: true 
+lang: "`r params$language`"
+params: 
+  id: ""
+  email: ""
+  token: ""
+  language: ""
+  gender: ""
+  wine_region: ""
+---
+
+```{r setup, echo=FALSE}
+german <- ifelse(params$language == "de", TRUE, FALSE)
+french <- ifelse(params$language == "fr", TRUE, FALSE)
+italian <- ifelse(params$language == "it", TRUE, FALSE)
+english <- ifelse(params$language == "en", TRUE, FALSE)
+```
+
+```{r german_text, child = 'german_text.Rmd', eval = german}
+```
+
+```{r french_text, child = 'french_text.Rmd', eval = french}
+```
+
+```{r german_text, child = 'italian_text.Rmd', eval = italian}
+```
+
+```{r english_text, child = 'english_text.Rmd', eval = english}
+```

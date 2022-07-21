@@ -1,0 +1,390 @@
+
+**Caro viticoltore, cara viticoltrice**  
+
+&nbsp;
+
+`r lorem::ipsum(paragraphs = 3)`
+  
+&nbsp;
+
+Cordiali saluti,  
+Lucca Zachmann, Chloe McCallum e Robert Finger  
+
+&nbsp;
+
+**Politecnico di Zurigo**  
+Gruppo per l'Economia e la Politica Agraria  
+Sonnegstrasse 33, 8092 Zurigo   
+lzachmann@ethz.ch
+
+\newpage
+\tableofcontents
+\newpage
+
+# Panoramica
+
+## Generale
+`r round(sum(data$farmsize)/100,1)` `r lorem::ipsum(paragraphs = 5)` 
+
+\newpage
+
+# Pratiche attuali
+
+## Varietà
+
+### Numero di varietà coltivate
+`r lorem::ipsum(paragraphs = 1)`
+
+```{r number_of_varieties, fig.cap = "Numero di varietà coltivate per azienda e regione", echo = F, message = F}
+load('data/data.RData')
+
+# Define expected share in 10 years
+sub_data <- subset(data, id == params$id)
+
+df.summary <- data %>%
+  group_by(wine_region) %>%
+  summarise(
+    sd = sd(NumberOfVarieties, na.rm = TRUE),
+    mean = mean(NumberOfVarieties)
+  )
+
+df.summary$mean_label <- as.integer(df.summary$mean) 
+
+for (v in 1:nrow(df.summary)) {
+  if (nchar(df.summary$mean_label[v]) == 1) {
+    df.summary$mean_label[v] <- paste0(" ", df.summary$mean_label[v])
+  } else {
+    df.summary$mean_label[v] <- paste0(df.summary$mean_label[v])
+  }
+}
+
+p <- ggplot(data = data, aes(y = NumberOfVarieties, x = wine_region)) +
+  geom_jitter(position = position_jitter(0.2), color = "darkgray") + 
+  geom_pointrange(data = df.summary, aes(x = wine_region, y = mean, ymin = mean-sd, ymax = mean+sd)) +
+  geom_jitter(data = sub_data, position = position_jitter(0.2), color = "red", size = 2.5) + 
+  geom_text(data = df.summary, aes(x = wine_region, y = mean, label = mean_label), color = "black", size = 2.5, hjust = -0.75) +
+  theme_bw() +
+  xlab("") +
+  ylab("") +
+  theme(panel.grid.major.x = element_blank(),
+        axis.text = element_text(size = 8),
+        axis.ticks.x=element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.y=element_blank()) 
+p
+```
+
+\newpage
+
+## Fattori di riduzione del rendimento
+`r lorem::ipsum(paragraphs = 1)`
+
+```{r negFactors_ch, fig.cap = "Fattori con il maggiore effetto negativo sugli utili (a livello svizzero, in %)", echo = F, message = F}
+load('data/data.RData')
+
+# Reshape wide to long
+data <- data %>%
+  ungroup() %>%
+  mutate(npr = n())
+
+data$NegImpact.other.[data$NegImpact.other. != 0] <- 1
+
+long <- data %>%
+  select(id, npr, starts_with("NegImpact")) %>%
+  gather(type, value, -c(id, npr))
+
+sub_data <- subset(long, id == params$id)
+
+sub_data$type[sub_data$type == "NegImpact.A1."] <- "Grandine"
+sub_data$type[sub_data$type == "NegImpact.A2."] <- "Malattie fungine"
+sub_data$type[sub_data$type == "NegImpact.A3."] <- "Insetti"
+sub_data$type[sub_data$type == "NegImpact.A4."] <- "Siccità"
+sub_data$type[sub_data$type == "NegImpact.A5."] <- "Erba"
+sub_data$type[sub_data$type == "NegImpact.A6."] <- "Gelo"
+sub_data$type[sub_data$type == "NegImpact.other."] <- "Altro"
+
+sub_data <- sub_data %>%
+  select(type, value)
+
+long <- long %>%
+  group_by(type) %>%
+  summarise(tot = sum(as.numeric(value)), npr = mean(npr)) 
+
+long$pct <- long$tot/long$npr*100
+
+long$type[long$type == "NegImpact.A1."] <- "Grandine"
+long$type[long$type == "NegImpact.A2."] <- "Malattie fungine"
+long$type[long$type == "NegImpact.A3."] <- "Insetti"
+long$type[long$type == "NegImpact.A4."] <- "Siccità"
+long$type[long$type == "NegImpact.A5."] <- "Erba"
+long$type[long$type == "NegImpact.A6."] <- "Gelo"
+long$type[long$type == "NegImpact.other."] <- "Altro"
+
+long <- merge(long, sub_data, by = "type")
+
+# Plot
+long %>%
+  ggplot(aes(type,pct, pattern = value, fill = type), pct)+
+  geom_col(width = 0.2, position = position_dodge(0.3), show.legend = FALSE) +
+  geom_col_pattern(position = position_dodge(preserve = "single"),
+                   color = NA, 
+                   pattern_fill = "black",
+                   pattern_angle = 45,
+                   pattern_density = 0.05,
+                   pattern_spacing = 0.025,
+                   pattern_key_scale_factor = 0.6, show.legend = FALSE) +
+  scale_pattern_manual(values = c(`1` = "stripe", `0` = "none")) +
+  scale_fill_manual(limits = c("Altro","Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine"),
+                    values = c("grey",wes_palette(6, name = "Zissou1", type = "continuous"))) +
+  coord_flip() +
+  geom_text(aes(label = round(pct, 1)), 
+            position = position_dodge(0.3), hjust = -0.1, size = 2) +
+  theme_bw() +
+  ylab("") +
+  xlab("") +
+  guides(fill = guide_legend(override.aes = list(size = 2))) +
+  scale_y_continuous(limits = c(0, 100), breaks = c(0, 10, 20, 30, 40, 50 ,60 ,70, 80,90,100)) +
+    scale_x_discrete(limits =  c("Altro","Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine")) +
+  scale_pattern_spacing_discrete(range = c(0.01, 0.05)) +
+  theme(axis.title.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        axis.text = element_text(size = 8),
+        axis.ticks.x=element_blank(),
+        panel.border = element_blank(),
+        axis.ticks.y=element_blank(),
+        legend.text=element_text(size=6),
+        legend.position="bottom")
+```
+
+`r lorem::ipsum(paragraphs = 2)`
+
+```{r negFactors_wr, fig.cap = "Fattori con il maggiore effetto negativo sugli utili (per regione, in %)", echo = F, message = F}
+
+# Per region
+regions <- c("Deutschschweiz","Ticino","Trois lacs","Vaud","Valais","Genève")
+
+list <- list()
+
+for (r in 1:length(regions)) {
+  
+  load('data/data.RData')
+  
+  # Reshape wide to long
+  data <- data %>%
+    filter(wine_region == regions[r]) %>%
+    mutate(npr = nrow(.))
+
+  long <- data %>%
+    select(id, npr, starts_with("NegImpact")) %>%
+    gather(type, value, -c(id, npr))
+  
+  if (params$wine_region == regions[r]) {
+    sub_data <- subset(long, id == params$id)
+
+    sub_data$type[sub_data$type == "NegImpact.A1."] <- "Grandine"
+    sub_data$type[sub_data$type == "NegImpact.A2."] <- "Malattie fungine"
+    sub_data$type[sub_data$type == "NegImpact.A3."] <- "Insetti"
+    sub_data$type[sub_data$type == "NegImpact.A4."] <- "Siccità"
+    sub_data$type[sub_data$type == "NegImpact.A5."] <- "Erba"
+    sub_data$type[sub_data$type == "NegImpact.A6."] <- "Gelo"
+  
+    sub_data <- sub_data %>%
+    select(type, value)
+  } else {
+    sub_data <- data.frame(type = c("","","","","",""), value = 0)
+    sub_data$type[1] <- "Grandine"
+    sub_data$type[2] <- "Malattie fungine"
+    sub_data$type[3] <- "Insetti"
+    sub_data$type[4] <- "Siccità"
+    sub_data$type[5] <- "Erba"
+    sub_data$type[6] <- "Gelo"
+  }
+  
+  sub_data <- sub_data %>%
+    filter(type != "NegImpact.other.")
+  
+  sub_data$value <- ifelse(sub_data$value == 0, "No", "Yes")
+  
+  long <- long %>%
+    filter(type != "NegImpact.other.")
+
+  long <- long %>%
+    group_by(type) %>%
+    summarise(tot = sum(as.numeric(value)), npr = mean(npr)) 
+
+  long$pct <- long$tot/long$npr*100
+  
+  long$type[long$type == "NegImpact.A1."] <- "Grandine"
+  long$type[long$type == "NegImpact.A2."] <- "Malattie fungine"
+  long$type[long$type == "NegImpact.A3."] <- "Insetti"
+  long$type[long$type == "NegImpact.A4."] <- "Siccità"
+  long$type[long$type == "NegImpact.A5."] <- "Erba"
+  long$type[long$type == "NegImpact.A6."] <- "Gelo"
+  
+  long <- merge(long, sub_data, by = "type")
+  
+  # Plot
+  if (regions[r] == "Ticino" | regions[r] == "Vaud" | regions[r] == "Genève") {
+    if (params$wine_region == regions[r]) {
+      p <- ggplot(long, aes(x = pct, y = type, pattern = value, fill = type)) +
+        geom_col(width = 0.75, position = position_dodge(0.75)) +
+          geom_col_pattern(position = position_dodge(preserve = "single"),
+                   color = NA, 
+                   pattern_fill = "black",
+                   pattern_angle = 45,
+                   pattern_density = 0.1,
+                   pattern_key_scale_factor = 0.6, show.legend = FALSE) +
+        scale_pattern_manual(values = c("Yes" = "stripe", "No" = "none")) +
+        scale_pattern_spacing_discrete(range = c(0.01, 0.1)) + 
+        geom_text(aes(label = round(pct, 1)), 
+                  position = position_dodge(0.75), hjust = -0.1, size = 2) +
+        ggtitle(regions[r]) +
+        scale_fill_manual(limits = c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine"),
+                    values = c(wes_palette(6, name = "Zissou1", type = "continuous"))) +
+        theme_bw() +
+        ylab("") +
+        xlab("") +
+        guides(fill="none") + 
+        scale_x_continuous(limits = c(0, 100), breaks = c(0, 10, 20, 30, 40, 50 ,60 ,70, 80,90,100)) +
+        scale_y_discrete(limits =  c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine")) +
+        theme(axis.title.x = element_blank(),
+              panel.grid.minor.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_text(size = 6),
+              axis.ticks.x=element_blank(),
+              panel.border = element_blank(),
+              axis.ticks.y=element_blank(),
+              legend.text=element_text(size=5),
+              legend.position="bottom",
+              legend.title=element_text(size=6),
+              axis.title.y = element_blank(),
+              axis.text.y = element_blank())
+    } else {
+      p <- ggplot(long, aes(pct, type, fill = type)) +
+        geom_col(width = 0.75, position = position_dodge(0.75)) +
+        geom_text(aes(label = round(pct, 1)), 
+                  position = position_dodge(0.75), hjust = -0.1, size = 2) +
+        ggtitle(regions[r]) +
+        scale_fill_manual(limits = c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine"),
+                    values = c(wes_palette(6, name = "Zissou1", type = "continuous"))) +
+        theme_bw() +
+        ylab("") +
+        xlab("") +
+        guides(fill="none") + 
+        scale_x_continuous(limits = c(0, 100), breaks = c(0, 10, 20, 30, 40, 50 ,60 ,70, 80,90,100)) +
+        scale_y_discrete(limits =  c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine")) +
+        theme(axis.title.x = element_blank(),
+              panel.grid.minor.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_text(size = 6),
+              axis.ticks.x=element_blank(),
+              panel.border = element_blank(),
+              axis.ticks.y=element_blank(),
+              legend.text=element_text(size=5),
+              legend.position="bottom",
+              legend.title=element_text(size=6),
+              axis.title.y = element_blank(),
+              axis.text.y = element_blank())
+    }
+  } else {
+    if (params$wine_region == regions[r]) {
+      p <- ggplot(long, aes(x = pct, y = type, pattern = value, fill = type)) +
+        geom_col(width = 0.75, position = position_dodge(0.75)) +
+                geom_col_pattern(position = position_dodge(preserve = "single"),
+                   color = NA, 
+                   pattern_fill = "black",
+                   pattern_angle = 45,
+                   pattern_density = 0.1,
+                   pattern_key_scale_factor = 0.6, show.legend = FALSE) +
+        scale_pattern_manual(values = c("Yes" = "stripe", "No" = "none")) +
+        scale_pattern_spacing_discrete(range = c(0.01, 0.1)) + 
+        geom_text(aes(label = round(pct, 1)), 
+                  position = position_dodge(0.75), hjust = -0.1, size = 2) +
+        ggtitle(regions[r]) +
+        scale_fill_manual(limits = c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine"),
+                    values = c(wes_palette(6, name = "Zissou1", type = "continuous"))) +
+        theme_bw() +
+        ylab("") +
+        xlab("") +
+        guides(fill="none") + 
+        scale_x_continuous(limits = c(0, 100), breaks = c(0, 10, 20, 30, 40, 50 ,60 ,70, 80,90,100)) +
+        scale_y_discrete(limits =  c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine")) +
+        theme(axis.title.x = element_blank(),
+              panel.grid.minor.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_text(size = 6),
+              axis.ticks.x=element_blank(),
+              panel.border = element_blank(),
+              axis.ticks.y=element_blank(),
+              legend.text=element_text(size=5),
+              legend.position="bottom",
+              legend.title=element_text(size=6),)
+    } else {
+      p <- ggplot(long, aes(pct, type, fill = type)) +
+        geom_col(width = 0.75, position = position_dodge(0.75)) +
+        geom_text(aes(label = round(pct, 1)), 
+                  position = position_dodge(0.75), hjust = -0.1, size = 2) +
+        ggtitle(regions[r]) +
+        scale_fill_manual(limits = c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine"),
+                    values = c(wes_palette(6, name = "Zissou1", type = "continuous"))) +
+        theme_bw() +
+        ylab("") +
+        xlab("") +
+        guides(fill="none") + 
+        scale_x_continuous(limits = c(0, 100), breaks = c(0, 10, 20, 30, 40, 50 ,60 ,70, 80,90,100)) +
+        scale_y_discrete(limits =  c("Siccità","Erba","Gelo","Insetti","Malattie fungine","Grandine")) +
+        theme(axis.title.x = element_blank(),
+              panel.grid.minor.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_text(size = 6),
+              axis.ticks.x=element_blank(),
+              panel.border = element_blank(),
+              axis.ticks.y=element_blank(),
+              legend.text=element_text(size=5),
+              legend.position="bottom",
+              legend.title=element_text(size=6))
+    }
+    }
+  list[[r]] <- p
+}
+
+ggarrange(list[[1]] + rremove("ylab") + rremove("x.text"), 
+                    list[[2]] + rremove("x.text"), 
+                    list[[3]] + rremove("ylab") + rremove("x.text"), 
+                    list[[4]] + rremove("x.text"), 
+                    list[[5]] + rremove("ylab") + rremove("xlab"),
+                    list[[6]] + rremove("xlab"),
+                    labels = NULL,
+                    ncol = 2, nrow = 3,
+                    common.legend = TRUE, legend = "bottom",
+                    align = "hv", 
+                    font.label = list(size = 10, color = "black", face = "bold", family = NULL, position = "top"))
+
+```
+
+
+\newpage
+
+# Indagine di follow-up \label{section1}
+`r lorem::ipsum(paragraphs = 2)`
+
+&nbsp;
+
+Basta cliccare su questo link:
+
+\faHandPointRight \ `r paste0("https://surveyaecp.ethz.ch/index.php/756865?token=",params$token,"&lang=",params$language)`
+
+&nbsp;
+
+Grazie mille! Per qualsiasi domanda o incertezza, contattateci.
+
+Cordiali saluti,  
+Lucca Zachmann, Chloe McCallum e Robert Finger  
+
+&nbsp;
+
+**Politecnico di Zurigo**  
+Gruppo per l'Economia e la Politica Agraria  
+Sonnegstrasse 33, 8092 Zurigo  
+lzachmann@ethz.ch
