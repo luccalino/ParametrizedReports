@@ -4,7 +4,7 @@
 # Load (and install) required libraries
 library(rmarkdown)
 library(conflicted)
-library(dplyr)
+library(tidyverse)
 library(ggpubr)
 library(ggpattern)
 library(wesanderson)
@@ -23,7 +23,7 @@ conflict_prefer("fa", "fontawesome")
 load("data/SynData.RData")
 
 # Loop through participants
-for (i in 1:15) {
+for (i in 3:15) {
   
   # Render report
   render('compile.Rmd', 

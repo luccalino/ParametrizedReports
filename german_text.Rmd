@@ -38,7 +38,7 @@ load('data/SynData.RData')
 
 sub_data <- subset(SynData, id == params$id)
 
-df.summary <- report_data %>%
+df.summary <- SynData %>%
   group_by(wine_region) %>%
   summarise(
     sd = sd(NumberOfVarieties, na.rm = TRUE),
