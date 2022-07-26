@@ -29,7 +29,7 @@ To do :interrobang:
 - Let me know what you would like to see added.
 
 ## User guide
-Using the repo is straightforward. First, fork it to your local machine. Second, open *ParametrizedReports.Rproj*. Third, open *master.R* and run the entire script. This will, if all prerequisities (see above) are installed properly, generate 15 reports in french, german or italian and save the pdfs into the *reports* folder. Fourth, now it is up to you: Add your dataset (manditory variables are id, token, startlanguage, wine_region) and modify the scripts (*german_text.Rmd*, *french_text.Rmd* and *italian_text.Rmd*) to your liking.
+Using the repo is straightforward. First, fork it to your local machine. Second, open *ParametrizedReports.Rproj*. Third, open *master.R* and run the entire script. This will, if all prerequisities (see above) are installed properly, generate 15 reports in french, german or italian and save the pdfs into the *reports* folder. Fourth, now it is up to you: Add your dataset (manditory variables are id, token, startlanguage, wine_region) and modify the scripts (*german_text.Rmd*, *french_text.Rmd* and *italian_text.Rmd*) to your liking. 
 
 ## Preview
 This can look like shown [here](/reports/Votre%20Rapport%20(Nr.%2010).pdf).
