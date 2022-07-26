@@ -13,7 +13,7 @@ This repo consists of these main files:
 2. compile:Rmd: Compiles a report file for the correct language and includes meta data. 
 3. [language]_text.Rmd: Style document/script for the language-specific report files.
 3. auto_mailing.R: Script that sends list of participants their individual report (via Outlook).
-4. data: Contains some dummy data.
+4. data: Contains some dummy data. We use synthdata according to Nowok et al. (2016) and the synthpop package (DOI:10.18637/jss.v074.i11) available at https://www.jstatsoft.org/article/view/v074i11.
 5. reports: The generated reports will be saved here.
 
 ## Features :sparkles:
@@ -36,4 +36,5 @@ This can look like shown [here](/reports/Votre%20Rapport%20(Nr.%20100).pdf).
 
 ### Author: 
 Lucca Zachmann (lzachmann[at]ethz.ch)  
-**ETH Zürich**, Agricultural Economics and Policy Group
+**ETH Zürich**  
+Agricultural Economics and Policy Group

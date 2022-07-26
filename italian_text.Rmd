@@ -24,7 +24,7 @@ lzachmann@ethz.ch
 # Panoramica
 
 ## Generale
-`r round(sum(data$farmsize)/100,1)` `r lorem::ipsum(paragraphs = 5)` 
+`r round(sum(SynData$farmsize)/100,1)` `r lorem::ipsum(paragraphs = 5)` 
 
 \newpage
 
@@ -36,12 +36,12 @@ lzachmann@ethz.ch
 `r lorem::ipsum(paragraphs = 1)`
 
 ```{r number_of_varieties, fig.cap = "Numero di varietà coltivate per azienda e regione", echo = F, message = F}
-load('data/data.RData')
+load('data/SynData.RData')
 
 # Define expected share in 10 years
-sub_data <- subset(data, id == params$id)
+sub_data <- subset(SynData, id == params$id)
 
-df.summary <- data %>%
+df.summary <- SynData %>%
   group_by(wine_region) %>%
   summarise(
     sd = sd(NumberOfVarieties, na.rm = TRUE),
@@ -58,7 +58,7 @@ for (v in 1:nrow(df.summary)) {
   }
 }
 
-p <- ggplot(data = data, aes(y = NumberOfVarieties, x = wine_region)) +
+p <- ggplot(data = SynData, aes(y = NumberOfVarieties, x = wine_region)) +
   geom_jitter(position = position_jitter(0.2), color = "darkgray") + 
   geom_pointrange(data = df.summary, aes(x = wine_region, y = mean, ymin = mean-sd, ymax = mean+sd)) +
   geom_jitter(data = sub_data, position = position_jitter(0.2), color = "red", size = 2.5) + 
@@ -80,10 +80,10 @@ p
 `r lorem::ipsum(paragraphs = 1)`
 
 ```{r negFactors_ch, fig.cap = "Fattori con il maggiore effetto negativo sugli utili (a livello svizzero, in %)", echo = F, message = F}
-load('data/data.RData')
+load('data/SynData.RData')
 
 # Reshape wide to long
-data <- data %>%
+data <- SynData %>%
   ungroup() %>%
   mutate(npr = n())
 
@@ -168,10 +168,10 @@ list <- list()
 
 for (r in 1:length(regions)) {
   
-  load('data/data.RData')
+  load('data/SynData.RData')
   
   # Reshape wide to long
-  data <- data %>%
+  data <- SynData %>%
     filter(wine_region == regions[r]) %>%
     mutate(npr = nrow(.))
 
