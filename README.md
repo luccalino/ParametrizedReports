@@ -4,7 +4,8 @@ This repository includes material to generate automated an personalised reports 
 ## Prerequisites
 The proper functioning of the repo hinges ono the availability of several installed bits of software:
 - pandoc: [https://pandoc.org](https://pandoc.org)
-- R packages (rmarkdown, conflicted, tidyverse, ggpubr, ggpattern, wesanderson)
+- R packages (rmarkdown, conflicted, tidyverse, ggpubr, ggpattern, wesanderson, RDCOMClient). Install RDCOMClient via devtools::install_github('omegahat/RDCOMClient').
+- For the mailing script, R Version 3.6 is requiered.
 - TinyTeX: [https://yihui.org/tinytex/](https://yihui.org/tinytex/)
 
 ## Material
@@ -12,7 +13,7 @@ This repo consists of these main files:
 1. master.R: Loops through participant id and renders pdf reports.
 2. compile:Rmd: Compiles a report file for the correct language and includes meta data. 
 3. [language]_text.Rmd: Style document/script for the language-specific report files.
-3. auto_mailing.R: Script that sends list of participants their individual report (via Outlook).
+3. auto_mailing.R: Script that sends list of participants their individual report (via Outlook). Note: It only works with R Version 3.6.
 4. data: Contains some dummy data. We use synthdata according to Nowok et al. (2016) and the synthpop package (DOI:10.18637/jss.v074.i11) available at https://www.jstatsoft.org/article/view/v074i11.
 5. reports: The generated reports will be saved here.
 
