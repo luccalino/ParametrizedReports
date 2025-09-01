@@ -23,6 +23,7 @@ date: "`r if (params$language == 'fr') {
 header-includes:
   \renewcommand{\contentsname}{`r if (params$language == "de") "Inhaltsverzeichnis" else if (params$language == "fr") "Table des matières" else if (params$language == "it") "Elenco del contenuto" else "Table of contents"`}
   \usepackage[bottom]{footmisc}
+  \usepackage{hyperref}
   \usepackage{floatrow}
   \floatsetup[figure]{capposition=top}
   \hypersetup{colorlinks = false, pdfborder={1 1 1}}
