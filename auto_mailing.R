@@ -1,4 +1,8 @@
-#devtools::install_github('omegahat/RDCOMClient')
+# Make sure you have R 3.5 installed and in use (older R versions available under https://cran.r-project.org/bin/windows/base/old/)
+# Then, install RDCOMClient directly from omegahat: install.packages("RDCOMClient", repos = "http://www.omegahat.net/R")
+# Install RTools from: https://cran.r-project.org/bin/windows/Rtools/
+
+# Load the package
 library(RDCOMClient)
 
 # Load mailing list
@@ -23,7 +27,7 @@ for (i in 1:nrow(EmailList)) {
                                     paste0("Caro viticoltore\n\nHai partecipato al nostro sondaggio sulla viticoltura svizzera. Vorremmo ringraziarvi per questo. Nel sondaggio avete indicato che avreste voluto un feedback sul sondaggio. Saremo lieti di inviarvi il vostro rapporto individuale con l'analisi del sondaggio in allegato.\n\nAbbiamo anche creato un breve sondaggio di follow-up, che richiede solo 10 minuti e fornirà importanti spunti per voi e per la ricerca. Potete partecipare facilmente al sondaggio al seguente link:\n\nhttps://surveyaecp.ethz.ch/index.php/756865?token=",EmailList$token[i],"&lang=",EmailList$startlanguage[i],"\n\nGrazie mille!\n\nBuoni saluti,\nLucca Zachmann, Chloe McCallum e Robert Finger")))
   
   ## Add report
-  outMail[["attachments"]]$Add(paste0("reports\\", ifelse(EmailList$startlanguage[i] == "de",paste0("Ihr Bericht (Nr. ", EmailList$id[i],").pdf"),
+  outMail[["attachments"]]$Add(paste0(file.path(getwd(), "reports\\", ifelse(EmailList$startlanguage[i] == "de",paste0("Ihr Bericht (Nr. ", EmailList$id[i],").pdf"),
                                                           ifelse(EmailList$startlanguage[i] == "fr",paste0("Votre Rapport (Nr. ", EmailList$id[i],").pdf"),paste0("Vostro Rapporto (Nr. ",EmailList$id[i],").pdf"))
                                                           )
                                       )
