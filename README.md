@@ -4,9 +4,9 @@ This repository includes material to generate automated an personalised reports 
 ## Prerequisites
 The proper functioning of the repo hinges ono the availability of several installed bits of software:
 - pandoc: [https://pandoc.org](https://pandoc.org)
-- R packages (rmarkdown, conflicted, tidyverse, ggpubr, ggpattern, wesanderson, RDCOMClient). Install RDCOMClient via devtools::install_github('omegahat/RDCOMClient').
-- For the mailing script, R Version 3.6 is requiered.
-- TinyTeX: [https://yihui.org/tinytex/](https://yihui.org/tinytex/)
+- R packages (rmarkdown, conflicted, tidyverse, ggpubr, ggpattern, wesanderson, RDCOMClient). Install RDCOMClient via install.packages("RDCOMClient", repos = "http://www.omegahat.net/R").
+- For the mailing script, R Version 3.5 is requiered. Older R versions available via [https://cran.r-project.org/bin/windows/base/old/](https://cran.r-project.org/bin/windows/base/old/).
+- TinyTeX: [https://yihui.org/tinytex/](https://yihui.org/tinytex/). Install via tinytex::install_tinytex().
 
 ## Material
 This repo consists of these main files:
