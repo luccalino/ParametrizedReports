@@ -1,19 +1,19 @@
 # Parametrised reports for survey participant feedback
-This repository includes material to generate automated an personalised reports in multiple languages for survey participants. This is done to i) provide the survey participants with *individual* feedback in which they see their position relative to peers in ii) their preferred language and iii) in an automated manner. Moreover, the repository includes a script to send the reports automatically via R, given that Outlook 10 is installed on a Windows machine.
+This repository includes material to generate automated an personalised reports in multiple languages for survey participants. This is done to i) provide the survey participants with *individual* feedback in which they see their position relative to peers in ii) their preferred language and iii) in an automated manner. Moreover, the repository includes a script to send the reports automatically to participants via R, given that Outlook 10 is installed on a Windows machine.
 
 ## Prerequisites
 The proper functioning of the repo hinges ono the availability of several installed bits of software:
 - pandoc: [https://pandoc.org](https://pandoc.org)
 - R packages (rmarkdown, conflicted, tidyverse, ggpubr, ggpattern, wesanderson, RDCOMClient). Install RDCOMClient via install.packages("RDCOMClient", repos = "http://www.omegahat.net/R").
 - For the mailing script, R Version 3.5 is requiered. Older R versions available via [https://cran.r-project.org/bin/windows/base/old/](https://cran.r-project.org/bin/windows/base/old/).
-- TinyTeX: [https://yihui.org/tinytex/](https://yihui.org/tinytex/). Install via tinytex::install_tinytex().
+- TinyTeX: [https://yihui.org/tinytex/](https://yihui.org/tinytex/). Install via tinytex::install_tinytex() in R.
 
 ## Material
 This repo consists of these main files:
 1. master.R: Loops through participant id and renders pdf reports.
 2. compile:Rmd: Compiles a report file for the correct language and includes meta data. 
 3. [language]_text.Rmd: Style document/script for the language-specific report files.
-3. auto_mailing.R: Script that sends list of participants their individual report (via Outlook). Note: It only works with R Version 3.6.
+3. auto_mailing.R: Script that sends list of participants their individual report (via Outlook). Note: It only works with R Version 3.5.
 4. data: Contains some dummy data. We use synthdata according to Nowok et al. (2016) and the synthpop package (DOI:10.18637/jss.v074.i11) available at https://www.jstatsoft.org/article/view/v074i11.
 5. reports: The generated reports will be saved here.
 
@@ -30,7 +30,7 @@ To do :interrobang:
 - Let me know what you would like to see added.
 
 ## User guide
-Using the repo is straightforward. First, fork it to your local machine. Second, open *ParametrizedReports.Rproj*. Third, open *master.R* and run the entire script. This will, if all prerequisities (see above) are installed properly, generate 15 reports in french, german or italian and save the pdfs into the *reports* folder. Fourth, now it is up to you: Add your dataset (manditory variables are id, token, startlanguage, wine_region) and modify the scripts (*german_text.Rmd*, *french_text.Rmd* and *italian_text.Rmd*) to your liking. 
+Using the repo is straightforward. First, fork it to your local machine or [download](https://github.com/luccalino/ParametrizedReports/archive/refs/heads/main.zip) it. Second, open *ParametrizedReports.Rproj*. Third, open *master.R* and run the entire script. This will, if all prerequisities (see above) are installed properly, generate 15 reports in french, german or italian and save the pdfs into the *reports* folder. Fourth, now it is up to you: Add your dataset (manditory variables are id, token, startlanguage, wine_region) and modify the scripts (*german_text.Rmd*, *french_text.Rmd* and *italian_text.Rmd*) to your liking. 
 
 ## Preview
 This can look like shown [here](/reports/Vostro%20Rapporto%20(Nr.%2010).pdf).
