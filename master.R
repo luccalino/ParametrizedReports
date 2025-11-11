@@ -9,8 +9,11 @@ library(ggpubr)
 library(ggpattern)
 library(wesanderson)
 library(lorem)
-#tinytex::install_tinytex()
+#install.packages("devtools")
 #devtools::install_github("gadenbuie/lorem")
+#tinytex::install_tinytex()
+#tinytex::tlmgr_install("style") e.g. tinytex::tlmgr_install("multirow") for multirow.sty in case it is not found
+
 
 conflict_prefer("filter", "dplyr")
 conflict_prefer("select", "dplyr")
