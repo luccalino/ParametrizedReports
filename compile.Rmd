@@ -35,7 +35,7 @@ output:
           keep_tex: yes
         toc_depth: 3
         number_sections: true 
-lang: "`r params$language`"
+#lang: "`r params$language`"
 params: 
   id: ""
   email: ""
